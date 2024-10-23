@@ -23,15 +23,20 @@ public class ScreenmatchApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		var consumoApi = new ConsumoApi();
+
+		//Mostra os dados da série
 		var json = consumoApi.obterDados("https://www.omdbapi.com/?t=gilmore+girls&apikey=6585022c");
 		System.out.println(json);
 		ConverteDados conversor = new ConverteDados();
 		DadosSerie dados = conversor.obterDados(json, DadosSerie.class);
 		System.out.println(dados);
+
+		//Mostra os dados de um episódio específico
 		json = consumoApi.obterDados("https://www.omdbapi.com/?t=gilmore+girls&season=1&episode=2&apikey=6585022c");
 		DadosEpisodio dadosEpisodio = conversor.obterDados(json, DadosEpisodio.class);
 		System.out.println(dadosEpisodio);
 
+		//Lista dos episódios de uma temporada
 		List<DadosTemporada> temporadas = new ArrayList<>();
 
 		for (int i = 1; i<= dados.totalTemporadas(); i++){
@@ -39,8 +44,6 @@ public class ScreenmatchApplication implements CommandLineRunner {
 			DadosTemporada dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
 			temporadas.add(dadosTemporada);
 		}
-
 		temporadas.forEach(System.out::println);
-
 	}
 }
